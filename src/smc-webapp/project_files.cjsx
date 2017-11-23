@@ -147,49 +147,35 @@ ListingHeader = rclass
             </Col>
         </Row>
 
-ShareButton = rclass
-    propTypes:
-        on_click : rtypes.func.isRequired
+ShareButton = ({on_click}) ->
+    <div
+        onClick = {on_click}
+        style   = {color:'rgb(102, 102, 102)', display:'inline'}
+    >
+        <Space/><Space/>Private
+    </div>
 
-    render: ->
-        <span><Space/><Space/>
-            <div
-                onClick = {@props.on_click}
-                style   = {color:'rgb(102, 102, 102)', display:'inline'}
-            >
-                Private
-            </div>
-        </span>
+PublicButton = ({on_click}) ->
+    <span><Space/>
+        <Button
+            bsStyle = 'info'
+            bsSize  = 'xsmall'
+            onClick = {on_click}
+        >
+            <Icon name='bullhorn' /> <span className='hidden-xs'>Public</span>
+        </Button>
+    </span>
 
-PublicButton = rclass
-    propTypes:
-        on_click : rtypes.func.isRequired
-
-    render: ->
-        <span><Space/>
-            <Button
-                bsStyle = 'info'
-                bsSize  = 'xsmall'
-                onClick = {@props.on_click}
-            >
-                <Icon name='bullhorn' /> <span className='hidden-xs'>Public</span>
-            </Button>
-        </span>
-
-CopyButton = rclass
-    propTypes:
-        on_click : rtypes.func.isRequired
-
-    render: ->
-        <span><Space/>
-            <Button
-                bsStyle = 'info'
-                bsSize  = 'xsmall'
-                onClick = {@props.on_click}
-            >
-                <Icon name='files-o' /> <span className='hidden-xs'>Copy</span>
-            </Button>
-        </span>
+CopyButton = ({on_click}) ->
+    <span><Space/>
+        <Button
+            bsStyle = 'info'
+            bsSize  = 'xsmall'
+            onClick = {on_click}
+        >
+            <Icon name='files-o' /> <span className='hidden-xs'>Copy</span>
+        </Button>
+    </span>
 
 generate_click_for = (file_action_name, full_path, project_actions) =>
     (e) =>
