@@ -149,7 +149,6 @@ ListingHeader = rclass
 
 ShareButton = rclass
     propTypes:
-        id       : rtypes.string
         on_click : rtypes.func.isRequired
 
     render: ->
@@ -164,7 +163,6 @@ ShareButton = rclass
 
 PublicButton = rclass
     propTypes:
-        id       : rtypes.string
         on_click : rtypes.func.isRequired
 
     render: ->
@@ -192,20 +190,15 @@ CopyButton = rclass
                 <Icon name='files-o' /> <span className='hidden-xs'>Copy</span>
             </Button>
         </span>
-generate_on_share_click = (full_path, actions) =>
-    (e) =>
-        e.preventDefault()
-        e.stopPropagation()
-        actions.set_all_files_unchecked()
-        actions.set_file_checked(full_path, true)
-        actions.set_file_action('share')
 
-generate_on_copy_click = (full_path, actions) =>
+generate_click_for = (file_action_name, full_path, project_actions) =>
     (e) =>
         e.preventDefault()
         e.stopPropagation()
-        actions.set_file_checked(full_path, true)
-        actions.set_file_action('copy')
+        unless file_actions[file_action_name].allows_multiple_files
+            project_actions.set_all_files_unchecked()
+        project_actions.set_file_checked(full_path, true)
+        project_actions.set_file_action(file_action_name)
 
 FileRow = rclass
     displayName : 'ProjectFiles-FileRow'
@@ -282,17 +275,15 @@ FileRow = rclass
     render_public_file_info: ->
         if @props.public_view
             <CopyButton
-                on_click = {generate_on_copy_click(@full_path(), @props.actions)}
+                on_click = {generate_click_for('copy', @full_path(), @props.actions)}
             />
         else if @props.is_public
             <PublicButton
-                id       = {@props.name}
-                on_click = {generate_on_share_click(@full_path(), @props.actions)}
+                on_click = {generate_click_for('share', @full_path(), @props.actions)}
             />
         else
             <ShareButton
-                id       = {@props.name}
-                on_click = {generate_on_share_click(@full_path(), @props.actions)}
+                on_click = {generate_click_for('share', @full_path(), @props.actions)}
             />
 
     full_path: ->
@@ -417,17 +408,17 @@ DirectoryRow = rclass
     render_public_directory_info: ->
         if @props.public_view
             <CopyButton
-                on_click = {generate_on_copy_click(@full_path(), @props.actions)}
+                on_click = {generate_click_for('copy', @full_path(), @props.actions)}
             />
         else if @props.is_public
             <PublicButton
                 id       = {@props.name}
-                on_click = {generate_on_share_click(@full_path(), @props.actions)}
+                on_click = {generate_click_for('share', @full_path(), @props.actions)}
             />
         else
             <ShareButton
                 id       = {@props.name}
-                on_click = {generate_on_share_click(@full_path(), @props.actions)}
+                on_click = {generate_click_for('share', @full_path(), @props.actions)}
             />
 
     full_path: ->
